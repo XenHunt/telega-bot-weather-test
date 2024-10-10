@@ -8,4 +8,12 @@ def getEnv(key):
     return envval
 
 
-config = {"TOKEN": (getEnv("BOT_TOKEN"))}
+config = {
+    "BOT_TOKEN": getEnv("BOT_TOKEN"),
+    "WEATHER_TOKEN": getEnv("WEATHER_TOKEN"),
+    "DATA_BASE": {
+        "USER": getEnv("DATABASE_USER"),
+        "PORT": getEnv("DATABASE_PORT"),
+        "PASSWORD": getEnv("DATABASE_PASSWORD"),
+    },
+}
