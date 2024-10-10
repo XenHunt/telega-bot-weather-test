@@ -19,17 +19,17 @@ async def get_weather(msg: types.Message):
     user = msg.from_user
     if user is None:
         await msg.answer("Ты не пользователь")
-        manualAdd("None", text if text is not None else "Error", "Ты не пользователь")
+        manualAdd(-1, text if text is not None else "Error", "Ты не пользователь")
         return
     if text is None or len(text.split()) != 2:
         await msg.answer("Не коректная команда (\\weather <название города>)")
         manualAdd(
-            user.full_name,
+            user.id,
             text if text is not None else "Error",
             "Не коректная команда (\\weather <название города>)",
         )
         return
-    username = user.full_name
+    userid = user.id
     city = text.split()[1]
     url = f"https://ru.api.openweathermap.org/data/2.5/weather?q={city}&appid={config['WEATHER_TOKEN']}&units=metric&lang=ru"
     response = requests.get(url)
@@ -38,13 +38,13 @@ async def get_weather(msg: types.Message):
         data = response.json()
         weather, temp, wind = data["weather"][0], data["main"], data["wind"]
 
-        ans = f"На данный момент погода в городе {city}:\nТемпература🌡️ - {temp['temp']}°C\nОщущается🧥 как {temp['feels_like']}°C\nПогода☁️ - {weather['main']}, {weather['description']}\nВлажность💧 - {temp['humidity']}\nСкорость ветра🌬️ - {wind['speed']} м/с"
+        ans = f"На данный момент погода в городе {city}:\nТемпература🌡️ {temp['temp']}°C\nОщущается🧥 как {temp['feels_like']}°C\nПогода☁️ - {weather['main']}, {weather['description']}\nВлажность💧 - {temp['humidity']}\nСкорость ветра🌬️ - {wind['speed']} м/с"
         await msg.answer(ans)
     else:
         ans = "Incorrect city or service (openweather) is down."
         await msg.answer(ans)
 
-    manualAdd(username, text, ans)
+    manualAdd(userid, text, ans)
 
 
 @dp.message(CommandStart())
@@ -52,11 +52,11 @@ async def cmd_start(msg: types.Message):
     user = msg.from_user
     if user is None:
         await msg.answer("Ты не пользователь")
-        manualAdd("None", "/start", "Ты не пользователь")
+        manualAdd(-1, "/start", "Ты не пользователь")
         return
-    username = user.full_name
+    userid = user.id
     ans = "Вы запустили бота BobrAI для выяснеиея погоды\nОсновная комманда: \\weather <название города>; для выяснениея нынешней погоды в городе"
-    manualAdd(username, "/start", ans)
+    manualAdd(userid, "/start", ans)
     await msg.answer(ans)
 
 

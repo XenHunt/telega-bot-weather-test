@@ -1,4 +1,4 @@
-from sqlalchemy import create_engine, String, DateTime
+from sqlalchemy import BigInteger, Integer, create_engine, String, DateTime
 from sqlalchemy.orm import Session, DeclarativeBase, Mapped, mapped_column
 import datetime
 from config import config
@@ -14,8 +14,8 @@ class Base(DeclarativeBase):
 
 class UserCommandLog(Base):
     __tablename__ = "user_command_log"
-    id: Mapped[int] = mapped_column(primary_key=True)
-    username: Mapped[str] = mapped_column(String)
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    userid: Mapped[int] = mapped_column(BigInteger)
     command: Mapped[str] = mapped_column(String)
     bot_response: Mapped[str] = mapped_column(String)
     date: Mapped[DateTime] = mapped_column(DateTime, default=datetime.datetime.utcnow())
@@ -26,8 +26,8 @@ class UserCommandLog(Base):
             ses.commit()
 
 
-def manualAdd(username: str, command: str, bot_response: str):
-    UserCommandLog(username=username, command=command, bot_response=bot_response).add()
+def manualAdd(userid: int, command: str, bot_response: str):
+    UserCommandLog(userid=userid, command=command, bot_response=bot_response).add()
 
 
 Base.metadata.create_all(engine)
