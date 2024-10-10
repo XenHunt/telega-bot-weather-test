@@ -4,6 +4,9 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
+sqlalchemy = "*"
+requests = "*"
+icecream = "*"
 
 [dev-packages]
 
