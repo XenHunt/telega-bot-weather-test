@@ -6,7 +6,7 @@ import logging
 
 import requests
 from config import config
-from models import manualAdd
+from models import manualAdd, findLastCity
 
 bot = Bot(config["BOT_TOKEN"])
 
@@ -21,7 +21,19 @@ async def get_weather(msg: types.Message):
         await msg.answer("Ты не пользователь")
         manualAdd(-1, text if text is not None else "Error", "Ты не пользователь")
         return
-    if text is None or len(text.split()) != 2:
+
+    userid = user.id
+    try:
+        last_city = findLastCity(userid)
+    except Exception as e:
+        print(e)
+        last_city = None
+    if (
+        text is None
+        or len(text.split()) == 1
+        and last_city is None
+        or len(text.split()) > 2
+    ):
         await msg.answer("Не коректная команда (\\weather <название города>)")
         manualAdd(
             user.id,
@@ -29,8 +41,8 @@ async def get_weather(msg: types.Message):
             "Не коректная команда (\\weather <название города>)",
         )
         return
-    userid = user.id
-    city = text.split()[1]
+
+    city = text.split()[1] if len(text.split()) == 2 else last_city
     url = f"https://ru.api.openweathermap.org/data/2.5/weather?q={city}&appid={config['WEATHER_TOKEN']}&units=metric&lang=ru"
     response = requests.get(url)
 

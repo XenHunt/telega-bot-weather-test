@@ -1,4 +1,4 @@
-from sqlalchemy import BigInteger, Integer, create_engine, String, DateTime
+from sqlalchemy import BigInteger, Integer, create_engine, String, DateTime, select, and_, desc
 from sqlalchemy.orm import Session, DeclarativeBase, Mapped, mapped_column
 import datetime
 from config import config
@@ -28,6 +28,19 @@ class UserCommandLog(Base):
 
 def manualAdd(userid: int, command: str, bot_response: str):
     UserCommandLog(userid=userid, command=command, bot_response=bot_response).add()
+
+
+def findLastCity(user_id: int):
+    print(user_id)
+    with Session(engine) as s:
+        stmt = (
+            select(UserCommandLog.command)
+            .where(UserCommandLog.userid == user_id)
+        .where(UserCommandLog.command.like("/weather %"))
+        .order_by(desc(UserCommandLog.date))
+        )
+        record = s.execute(stmt).first()
+        return record[0].split()[1]
 
 
 Base.metadata.create_all(engine)
