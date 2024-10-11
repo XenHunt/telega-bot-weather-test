@@ -1,0 +1,59 @@
+#+AUTHOR: XenHunt
+#+date: 2024:10:11
+
+* Что это?
+Это погодный бот.
+
+* Используемые технологии
++ aiogram
++ postgresql
++ sqlalchemy
++ requests
+
+* Как запустить?
+
+Для запуска есть несколько этапов:
+
+** Настроить переменные окружения
+
+*** С direnv
+Надо добавить в =.envrc=:
+#+begin_src bash
+export DATABASE_USER="<имя_пользователя_бд>"
+export DATABASE_NAME="<название_бд>"
+export DATABASE_PASSWORD="<пороль_от_бд>"
+export DATABASE_IP="<ip_бд>"
+export DATABASE_PORT=<порт_бд>
+export BOT_TOKEN="<токен_бота>"
+export WEATHER_TOKEN="<токен_openweathermap>"
+#+end_src
+
+Затем активировать
+#+begin_src bash
+direnv allow
+#+end_src
+
+***  Без direnv
+Сделать тоже самое, но выполнить каждую команду в консоли
+
+** Установить библиотеки
+
+*** С pipenv
+#+begin_src bash
+pipenv install
+#+end_src
+
+*** Без pipenv
+#+begin_src bash
+python -m venv ./venv
+source ./venv/bin/activate
+pip install -r requirments.txt
+#+end_src
+
+** Запуск
+#+begin_src bash
+python bot.py
+#+end_src
+
+** Что запускается первым?
+Первым запускается бот, затем restapi.
